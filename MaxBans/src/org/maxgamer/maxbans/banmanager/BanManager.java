@@ -581,7 +581,7 @@ public class BanManager{
      * Does not return expired bans, ever.
      */
     public Ban getBan(String name){
-    	name = name.toLowerCase();
+    	name = name.toUpperCase();
     	
     	Ban ban = bans.get(name);
     	if(ban != null){
@@ -665,7 +665,7 @@ public class BanManager{
      * so that [0] is the first warning, and [size-1] is the most recent warning.
      */
     public List<Warn> getWarnings(String name){
-    	name = name.toLowerCase();
+    	name = name.toUpperCase();
     	List<Warn> warnings = this.warnings.get(name);
     	
     	if(warnings == null) return null; //No warnings, return an empty list.
@@ -711,8 +711,8 @@ public class BanManager{
      * @param banner The admin who banned them
      */
     public void ban(String name, String reason, String banner){
-    	name = name.toLowerCase();
-    	banner = banner.toLowerCase();
+    	name = name.toUpperCase();
+    	banner = banner.toUpperCase();
     	players.add(name);
     	
     	this.unban(name); //Ensure they're unbanned first.
@@ -786,7 +786,7 @@ public class BanManager{
      * @param name The name of the player who is banned
      */
     public void unban(String name){
-    	name = name.toLowerCase();
+    	name = name.toUpperCase();
     	Ban ban = this.bans.get(name);
     	TempBan tBan = this.tempbans.get(name);
     	
@@ -948,8 +948,8 @@ public class BanManager{
      * @param reason The reason for the warning
      */
     public void warn(String name, String reason, String banner){
-    	name = name.toLowerCase();
-    	banner = banner.toLowerCase();
+    	name = name.toUpperCase();
+    	banner = banner.toUpperCase();
     	players.add(name);
     	
     	ConfigurationSection cfg = plugin.getConfig().getConfigurationSection("warnings");
@@ -1073,7 +1073,7 @@ public class BanManager{
      * @param name The name of the player. Case insensitive.
      */
     public void clearWarnings(String name){
-    	name = name.toLowerCase();
+    	name = name.toUpperCase();
     	
     	this.warnings.remove(name);
     	
@@ -1100,7 +1100,7 @@ public class BanManager{
      * no record of the player previously.
      */
     public boolean logActual(String name, String actual){
-    	name = name.toLowerCase();
+    	name = name.toUpperCase();
     	
     	//Record the players original name versus the lowercase one.
 		String oldActual = this.actualNames.put(name, actual);
