@@ -554,7 +554,7 @@ public class BanManager{
 	 * This will never return an expired mute.
 	 */
     public Mute getMute(String name) {
-    	name = name.toLowerCase();
+    	name = name.tpUpperCase();
     	
         Mute mute = mutes.get(name);
         if (mute != null) {
@@ -720,7 +720,7 @@ public class BanManager{
     	Ban ban = new Ban(name, reason, banner, System.currentTimeMillis());
     	this.bans.put(name, ban);
     	
-    	db.execute("INSERT INTO bans (name, reason, banner, time) VALUES (?, ?, ?, ?)", name, reason, banner, System.currentTimeMillis());
+    	db.execute("INSERT INTO historial (name, reason, banner, time, tipo) VALUES (?, ?, ?, ?, ban)", name, reason, banner, System.currentTimeMillis());
     	kick(name, ban.getKickMessage());
     }
     
@@ -792,13 +792,13 @@ public class BanManager{
     	
     	if(ban != null){
     		this.bans.remove(name);
-    		db.execute("DELETE FROM bans WHERE name = ?", name);
+    		db.execute("DELETE FROM historial WHERE name = ?", name);
     	}
     	if(tBan != null){
     		this.tempbans.remove(name);
     		if(ban == null){
     			//We still need to run this query then.
-    			db.execute("DELETE FROM bans WHERE name = ?", name);
+    			db.execute("DELETE FROM historial WHERE name = ?", name);
     		}
     	}
     }
@@ -813,13 +813,13 @@ public class BanManager{
     	
     	if(ipBan != null){
     		this.ipbans.remove(ip);
-    		db.execute("DELETE FROM ipbans WHERE ip = ?", ip);
+    		db.execute("DELETE FROM historial WHERE ip = ?", ip);
     	}
     	if(tipBan != null){
     		this.tempipbans.remove(ip);
     		if(ipBan == null){
     			//We still need to delete it from the database
-    			db.execute("DELETE FROM ipbans WHERE ip = ?", ip);
+    			db.execute("DELETE FROM historial WHERE ip = ?", ip);
     		}
     	}
     }
@@ -829,7 +829,7 @@ public class BanManager{
      * @param name The name of the player. Case insensitive.
      */
     public void unmute(String name){
-    	name = name.toLowerCase();
+    	name = name.toUpperCase();
     	
     	Mute mute = this.mutes.get(name);
     	TempMute tMute = this.tempmutes.get(name);
@@ -837,13 +837,13 @@ public class BanManager{
     	//Escape it
     	if(mute != null){
     		this.mutes.remove(name);
-    		db.execute("DELETE FROM mutes WHERE name = ?", name);
+    		db.execute("DELETE FROM hisotrial WHERE name = ?", name);
     	}
     	if(tMute != null){
     		this.tempmutes.remove(name);
     		if(mute == null){
     			//We still need to delete the mute from the database
-    			db.execute("DELETE FROM mutes WHERE name = ?", name);
+    			db.execute("DELETE FROM historial WHERE name = ?", name);
     		}
     	}
     }
@@ -865,7 +865,7 @@ public class BanManager{
     	TempBan ban = new TempBan(name, reason, banner, System.currentTimeMillis(), expires);
     	this.tempbans.put(name, ban);
     	
-    	db.execute("INSERT INTO bans (name, reason, banner, time, expires) VALUES (?, ?, ?, ?, ?)", name, reason, banner, System.currentTimeMillis(), expires);
+    	db.execute("INSERT INTO historial (name, reason, banner, time, tipo, expires) VALUES (?, ?, ?, ?, kick, ?)", name, reason, banner, System.currentTimeMillis(), expires);
     	kick(name, ban.getKickMessage());
     }
     
@@ -876,14 +876,14 @@ public class BanManager{
      * @param banner The admin who banned them
      */
     public void ipban(String ip, String reason, String banner){
-    	banner = banner.toLowerCase();
+    	banner = banner.toUpperCase();
     	
     	this.unbanip(ip); //Ensure it's unbanned first.
     	
     	IPBan ipban = new IPBan(ip, reason, banner, System.currentTimeMillis());
     	this.ipbans.put(ip, ipban);
     	
-    	db.execute("INSERT INTO ipbans (ip, reason, banner, time) VALUES (?, ?, ?, ?)", ip, reason, banner, System.currentTimeMillis());
+    	db.execute("INSERT INTO historial (ip, reason, banner, time, tipo) VALUES (?, ?, ?, ?, ipban)", ip, reason, banner, System.currentTimeMillis());
     	kickIP(ip, ipban.getKickMessage());
     }
     
@@ -895,14 +895,14 @@ public class BanManager{
      * @param expires The time the ban expires
      */
     public void tempipban(String ip, String reason, String banner, long expires){
-    	banner = banner.toLowerCase();
+    	banner = banner.toUpperCase();
     	
     	this.unbanip(ip); //Ensure it's unbanned first.
     	
     	TempIPBan tib = new TempIPBan(ip, reason, banner, System.currentTimeMillis(), expires);
     	this.tempipbans.put(ip, tib);
     	
-    	db.execute("INSERT INTO ipbans (ip, reason, banner, time, expires) VALUES (?, ?, ?, ?, ?)", ip, reason, banner, System.currentTimeMillis(), expires);
+    	db.execute("INSERT INTO hisotrial (ip, reason, banner, time, expires) VALUES (?, ?, ?, ?, ?)", ip, reason, banner, System.currentTimeMillis(), expires);
     	kickIP(ip, tib.getKickMessage());
     }
     
